@@ -1,5 +1,81 @@
 [build-system]
-requires = ["setuptools>=42.1", "wheel", "setuptools_scm[toml]>=3.4.3"]
+requires = ["setuptools>=61.2", "wheel", "setuptools_scm[toml]>=3.4.3"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "sre_yield"
+authors = [{name = "Alex Perry", email = "alex.perry@google.com"}]
+license = {text = "Apache"}
+description = "Expands a regular expression to its possible matches"
+keywords = []
+readme = "README.rst"
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Intended Audience :: Developers",
+    "Development Status :: 5 - Production/Stable",
+    "Operating System :: OS Independent",
+]
+urls = {Homepage = "https://github.com/google/sre_yield"}
+dynamic = ["version"]
+
+[project.scripts]
+demo_sre_yield = "sre_yield:main"
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+namespaces = false
+include = ["sre_yield", "sre_yield.*"]
+
 [tool.setuptools_scm]
+
+[tool.coverage.run]
+branch = true
+include = ["sre_yield/*"]
+omit = [
+    "sre_yield/tests/*",
+    "sre_yield/testing_utils.py",
+]
+
+[tool.coverage.report]
+fail_under = 94
+precision = 1
+show_missing = true
+skip_covered = true
+
+[tool.isort]
+line-length = 88
+multi-line-output = 3
+force-grid-wrap = false
+include-trailing-comma = true
+use-parentheses = true
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py36,py37,py38,py38-minimal
+isolated_build = True
+"""
+
+[tool.testenv]
+deps = "-rrequirements-dev.txt"
+whitelist_externals = "make"
+commands = [
+    "make doctest",
+    "make test"
+]
+setenv = [
+    "COVERAGE_FILE={envdir}/.coverage",
+    "MYPY_CACHE_DIR={envdir}/.mypy_cache"
+]
+
+[tool.testenv.py38-minimal]
+# This makes sure that thet the setup metadata has everything we need to run the
+# cli.
+deps = ""
+commands = """demo_sre_yield 'a|b'"""
+
+[tool.flake8]
+ignore = ["E203", "E231", "E266", "E302", "E501", "W503"]
+max-line-length = 88
