@@ -19,7 +19,7 @@ doctest: README.rst
 
 .PHONY: test
 test:
-	$(PYTHON) -m coverage run -m sre_yield.tests $(TESTOPTS)
+	$(PYTHON) -m coverage run -m tests $(TESTOPTS)
 	$(PYTHON) -m coverage report
 
 .PHONY: lint
