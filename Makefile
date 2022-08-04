@@ -19,7 +19,7 @@ doctest: README.rst
 
 .PHONY: test
 test:
-	$(PYTHON) -m coverage run -m sre_yield.tests $(TESTOPTS)
+	$(PYTHON) -m coverage run -m tests $(TESTOPTS)
 	$(PYTHON) -m coverage report
 
 .PHONY: lint
@@ -42,11 +42,11 @@ bench:
 
 .PHONY: format
 format:
-	isort --recursive -y sre_yield benchmarks setup.py
-	black sre_yield benchmarks setup.py
+	isort --recursive -y sre_yield benchmarks
+	black sre_yield benchmarks
 
 .PHONY: release
 release:
 	rm -rf dist
-	$(PYTHON) setup.py sdist bdist_wheel
+	$(PYTHON) -m build -nwsx .
 	twine upload dist/*
